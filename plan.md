@@ -59,24 +59,29 @@ Causal ML on the Criteo uplift RCT (13.98M users, verified locally): use the ran
 
 ## Stage 2 — CATE estimation & honest evaluation (weeks 2–3)
 
-- [ ] Meta-learners: T-, X-, DR-learner (gradient-boosting base learners); causal forest (econml); uniform interface in `learners.py`
-- [ ] Evaluation: Qini and uplift curves on held-out folds with seeded bootstrap CIs; AUUC comparison table (the external 0.64 reference lands here); decile-level GATES calibration (predicted vs realized group effects)
-- [ ] Heterogeneity inference (H1): Chernozhukov et al. BLP/GATES/CLAN on held-out folds
-- [ ] Coding tests: learner interface contracts; CI determinism under seed; a **synthetic-data recovery test** — on simulated data with known CATE, every learner must recover it within tolerance (the calibration certificate of this project)
-- [ ] `notebooks/02_cate_estimators.ipynb` asserting the comparison table
+- [x] Meta-learners: T-, X-, DR-learner (gradient-boosting base learners); causal forest (econml); uniform interface in `learners.py`
+- [x] Evaluation: Qini and uplift curves on held-out folds with seeded bootstrap CIs; AUUC comparison table (the external 0.64 reference lands here); decile-level GATES calibration (predicted vs realized group effects)
+- [x] Heterogeneity inference (H1): Chernozhukov et al. BLP/GATES/CLAN on held-out folds
+- [x] Coding tests: learner interface contracts; CI determinism under seed; a **synthetic-data recovery test** — on simulated data with known CATE, every learner must recover it within tolerance (the calibration certificate of this project)
+- [x] `notebooks/02_cate_estimators.ipynb` asserting the comparison table
 
 **Gate (`gate_stage2`, hard):** synthetic-recovery test green for every learner (a learner that can't recover a known CATE disqualifies itself); H1 verdict recorded with corrected p-values.
 
+**Gate passed 2026-07-17:** 13 passed — all four learners pass synthetic recovery (corr 0.79–0.86); **H1 supported**: β₂ = 0.384 (se 0.039), p = 9.9e-23 (C8). Learner ranking C9 (forest first, AUUC 0.71–0.84 vs external 0.64). Findings en route: (1) **the raw file is treatment-block-ordered** — positional tie-breaking corrupts rank metrics (NaN GATES deciles, bootstrap-inconsistent Qini); fixed with seeded-random tie-breaking + regression test (C11); (2) LightGBM `n_jobs=-1` pathological on this box (42s vs 0.08s) — threads pinned; (3) H1 test spec pre-registered as amendment A1 before estimation; (4) DR proxy over-disperses at the extremes (GATES slope ≈ β₂ < 1) — orders users well, absolute CATEs shrink toward the mean; relevant for Stage 4 policy framing.
+
 ## Stage 3 — The headline: how wrong without the experiment? (weeks 3–4)
 
-- [ ] **Pre-register the confounding protocol before running** (append to HYPOTHESES.md): the biasing mechanisms (e.g., drop treated non-converters with probability p; confound assignment on f0–f2), severity grid, and the exact repair estimators (naive diff-in-means, outcome regression, IPW, AIPW/DR)
-- [ ] Implement `confound.py`: RCT → synthetic observational datasets, mechanism + severity parameterized, seeded
-- [ ] The experiment: true ATE (known) vs naive vs corrected estimates across the severity grid; bias curves with CIs; "recovery fraction" per estimator
-- [ ] Robustness: results across both mechanisms; sensitivity-analysis framing (how much unobserved confounding would fully break DR?)
-- [ ] `notebooks/04_how_wrong.ipynb` — the headline chart: bias vs severity, three estimator lines, ground truth at zero
-- [ ] H3 verdict recorded
+- [x] **Pre-register the confounding protocol before running** (append to HYPOTHESES.md): the biasing mechanisms (e.g., drop treated non-converters with probability p; confound assignment on f0–f2), severity grid, and the exact repair estimators (naive diff-in-means, outcome regression, IPW, AIPW/DR)
+  - Registered as amendment A2. Deviation from the sketch, made *before* estimation: confound on f9/f8/f4 (the outcome-predictive features), not f0–f2 (|corr| ≤ 0.11 — would have made H3 vacuous).
+- [x] Implement `confound.py`: RCT → synthetic observational datasets, mechanism + severity parameterized, seeded
+- [x] The experiment: true ATE (known) vs naive vs corrected estimates across the severity grid; bias curves with CIs; "recovery fraction" per estimator
+- [x] Robustness: results across both mechanisms; sensitivity-analysis framing (how much unobserved confounding would fully break DR?)
+- [x] `notebooks/04_how_wrong.ipynb` — the headline chart: bias vs severity, three estimator lines, ground truth at zero
+- [x] H3 verdict recorded
 
 **Gate (`gate_stage3`):** headline row filled with Holm-corrected verdicts; every number asserted.
+
+**Gate passed 2026-07-17:** 11 passed. **H3 supported (raw, strong):** at γ\* = 1.0 the naive ATE is wrong by **+6.08 pp = 5.9× the true effect** (C12); AIPW recovers **93.7% [92.1, 95.3]** of the gap (C13); p_H3 = 4.5e-29 — with H1 (9.9e-23), both already survive any Holm ordering at α = 0.05; formal adjudication after H2. M2 (selection on outcome) is unrepairable as theory demands (C14); hiding the confounders sextuples AIPW's bias (C15). **Deepest finding (C16):** at severity 0 the adjusted estimators dissent from raw diff-in-means by ≈ −0.3 pp and are partly *right* to — v2.1's merged sub-experiments make assignment mildly covariate-predictable (ê ∈ [0.64, 0.98], corr(ê, y) = +0.21; cf. Stage 1's max SMD 0.049), so the "RCT ground truth" itself carries ~0.3 pp definitional ambiguity. Report limitation, and a core interview talking point.
 
 ## Stage 4 — The policy layer (week 5)
 
@@ -112,3 +117,5 @@ Causal ML on the Criteo uplift RCT (13.98M users, verified locally): use the ran
 | ---- | ----- | --------------- | ----- |
 | 2026-07-17 | 0 | gate_stage0: 5 passed | causalml 0.17 + econml 0.16 both fine on py3.13 (pins: sklearn<1.7, numpy<2.4); sha256 sidecars fixed to portable paths |
 | 2026-07-17 | 1 | Full ITT ATE: conversion +0.1152 pp [+0.1085, +0.1219]; visit +1.0342 pp [+1.0056, +1.0629] | max \|SMD\| 0.0488; 1M dev subsample certified (max cov \|z\| 1.83, ATEs inside full CIs; 9.9 MB parquet); conversion MDE 0.0345 pp @1M / 0.0092 pp @full; gate_stage1: 10 passed (CLAIMS C3–C7) |
+| 2026-07-17 | 2 | **H1 supported (raw):** BLP β₂ = 0.384 (se 0.039), p = 9.9e-23; GATES decile 10 vs 1: +4.99 pp vs +1.53 pp | Forest tops Qini (0.00298 vs DR 0.00206); conversion metrics noisy as power analysis predicted; treatment-block-ordered raw file discovered → seeded tie-breaking (C11); gate_stage2: 13 passed (C8–C11) |
+| 2026-07-17 | 3 | **H3 supported (raw, strong): naive off by 5.9× the true ATE at γ\*; AIPW recovers 93.7% [92.1, 95.3]**; p_H3 = 4.5e-29 | M2 unrepairable (AIPW +2.5× at p_drop 0.5); hidden confounder → AIPW bias ×6.5; benchmark ambiguity ~0.3 pp from v2.1 merge (C16); gate_stage3: 11 passed (C12–C16) |
