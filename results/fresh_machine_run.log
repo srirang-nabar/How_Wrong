@@ -1,0 +1,22 @@
+== fresh-machine Tier 1 dry run: 2026-07-17T20:58:16+05:30 ==
+== raw data present: 0 files (expect 0) ==
+ + widgetsnbextension==4.0.15
+ + xgboost==3.3.0
+
+real	0m3.327s
+user	0m0.768s
+sys	0m0.957s
+== pytest (not slow) ==
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+47 passed, 4 skipped, 1 deselected, 71 warnings in 66.45s (0:01:06)
+
+real	1m10.389s
+user	0m58.893s
+sys	0m2.481s
+== notebooks execute top-to-bottom ==
+  notebooks/01_rct_foundations.ipynb: 17.66s
+  notebooks/02_cate_estimators.ipynb: 19.34s
+  notebooks/03_policy.ipynb: 14.32s
+  notebooks/04_how_wrong.ipynb: 14.03s
+== fresh-machine Tier 1: COMPLETE 2026-07-17T21:00:35+05:30 ==

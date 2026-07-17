@@ -12,6 +12,13 @@ from how_wrong import data
 
 pytestmark = pytest.mark.gate_stage0
 
+# raw files are gitignored (311 MB); on a fresh clone (Tier 1: no downloads)
+# the raw-data contracts skip rather than fail — Tier 3 restores them
+needs_raw = pytest.mark.skipif(
+    not data.CRITEO_PATH.exists() or not data.HILLSTROM_PATH.exists(),
+    reason="raw data not present (Tier 1 clone) — see REPRODUCING.md Tier 3",
+)
+
 
 def test_causal_stack_imports():
     """The Stage 0 decision point: causalml AND econml both work on 3.13."""
@@ -24,12 +31,14 @@ def test_causal_stack_imports():
     import lightgbm  # noqa: F401
 
 
+@needs_raw
 def test_raw_files_present_and_checksummed():
     for path in (data.CRITEO_PATH, data.HILLSTROM_PATH):
         assert path.exists(), f"missing raw file: {path}"
         assert data.verify_sidecar(path), f"checksum mismatch: {path}"
 
 
+@needs_raw
 def test_hillstrom_schema_and_rowcount():
     df = data.load_hillstrom()
     assert len(df) == data.HILLSTROM_N_ROWS  # CLAIMS.md C2
@@ -41,6 +50,7 @@ def test_hillstrom_schema_and_rowcount():
     }
 
 
+@needs_raw
 def test_criteo_schema():
     df = data.load_criteo(nrows=1000)
     assert list(df.columns) == data.CRITEO_COLUMNS
@@ -49,5 +59,6 @@ def test_criteo_schema():
 
 
 @pytest.mark.slow
+@needs_raw
 def test_criteo_full_rowcount():
     assert data.count_rows_gz() == data.CRITEO_N_ROWS  # CLAIMS.md C1

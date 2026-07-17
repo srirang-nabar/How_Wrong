@@ -6,15 +6,15 @@ methods under controlled synthetic confounding, (2) estimate heterogeneous
 treatment effects with honest evaluation, and (3) convert them into a
 budget-constrained uplift-targeting policy.
 
-**Status: Stage 4 complete — all three primary hypotheses adjudicated.**
-The headline: naive observational estimation misses the true effect by
-**5.9×**; doubly-robust correction recovers **93.7%** when confounders are
-observed, none of it under selection on outcome (C12–C16). Heterogeneity
-is real (H1, C8). And the honest surprise: **uplift targeting lost to
-"target likely buyers" on the pre-registered test** (H2 rejected, C17) —
-at rare base rates there are no sure things, so the simple baseline is a
-near-optimal uplift ranking (C18). Remaining: Stage 5 (full-data finals,
-report, verification pack).
+**Status: COMPLETE.** All five stages gated green (51 tests); Holm family
+verdict: **H3 supported, H1 supported, H2 rejected**. Headline: naive
+observational estimation misses the true effect by **5.9×**; doubly-robust
+correction recovers **93.7%** when confounders are observed, none of it
+under selection on outcome. The honest surprise: **uplift targeting lost
+to "target likely buyers" on the pre-registered test** — at rare base
+rates there are no sure things. Full write-up in
+[report/report.md](report/report.md); every number is a CLAIMS.md row;
+fresh-machine verification in 2m19s (`results/fresh_machine_run.log`).
 
 ## Headline results
 

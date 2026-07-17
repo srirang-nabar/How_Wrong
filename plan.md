@@ -98,13 +98,16 @@ Causal ML on the Criteo uplift RCT (13.98M users, verified locally): use the ran
 
 ## Stage 5 — Full-data finals, write-up & verification pack
 
-- [ ] Full 13.98M-row runs for the pre-registered final numbers only (no new analysis at full scale — that's fishing)
-- [ ] **Post-C16 exploratory additions (labelled as such):** (a) covariate-adjusted companion ATE (AIPW, full data) so the report states the truth range — raw +1.03 pp vs adjusted ≈ +0.7 pp — with the merge-artifact explanation; (b) BLP robustness re-run with estimated ê in place of the constant 0.85 (A1 assumed flat propensity)
-- [ ] README headline table; `report/report.md` (house style; limitations: single RCT, ad-exposure treatment nuances, external validity); `report/interview_qa.md` (fundamental problem of causal inference; why AUC ≠ uplift; Neyman orthogonality in the DR-learner; how you'd design the experiment; the sure-things/persuadables quadrant)
-- [ ] Fresh-machine dry run (key-less, download-less Tier 1) → `results/fresh_machine_run.log`
-- [ ] Resume bullets with real numbers (each a CLAIMS.md row)
+- [x] Full 13.98M-row runs for the pre-registered final numbers only (no new analysis at full scale — that's fishing)
+- [x] **Post-C16 exploratory additions (labelled as such):** (a) covariate-adjusted companion ATE (AIPW, full data) so the report states the truth range — raw +1.03 pp vs adjusted ≈ +0.7 pp — with the merge-artifact explanation; (b) BLP robustness re-run with estimated ê in place of the constant 0.85 (A1 assumed flat propensity)
+  - Results: visit +0.747 pp (se 0.013) vs raw +1.034 pp; conversion +0.101 pp vs +0.115 pp (C20). BLP-ê: β₂ = 0.266, p = 1.1e-11 — attenuated but decisive (C21).
+- [x] README headline table; `report/report.md` (house style; limitations: single RCT, ad-exposure treatment nuances, external validity); `report/interview_qa.md` (fundamental problem of causal inference; why AUC ≠ uplift; Neyman orthogonality in the DR-learner; how you'd design the experiment; the sure-things/persuadables quadrant)
+- [x] Fresh-machine dry run (key-less, download-less Tier 1) → `results/fresh_machine_run.log`
+- [x] Resume bullets with real numbers (each a CLAIMS.md row) — `report/resume_bullets.md`
 
 **Gate (`gate_stage5`):** fresh-machine Tier 1 passes; budget of full-data runs documented (they're CPU-hours, not money — but log them).
+
+**Gate passed 2026-07-17 — PROJECT COMPLETE:** 6 passed (full suite: 51). Fresh-machine Tier 1: clone-shaped copy (0 raw files), `uv sync --frozen` 3.3s, 47 tests passed + 4 graceful skips, all four notebooks execute, total 2m19s (`results/fresh_machine_run.log`, C22). Finals (C19–C21): Holm family — **H3 supported, H1 supported, H2 rejected**; full-data AIPW companion visit +0.747 pp vs raw +1.034 pp; BLP-ê robustness β₂ = 0.266, p = 1.1e-11. Compute budget ~7 CPU-hours, logged in `results/stage5/finals.json`. Report pack: `report/report.md`, `report/interview_qa.md`, `report/resume_bullets.md`.
 
 ## Known risks & pre-checked facts
 
@@ -126,3 +129,4 @@ Causal ML on the Criteo uplift RCT (13.98M users, verified locally): use the ran
 | 2026-07-17 | 2 | **H1 supported (raw):** BLP β₂ = 0.384 (se 0.039), p = 9.9e-23; GATES decile 10 vs 1: +4.99 pp vs +1.53 pp | Forest tops Qini (0.00298 vs DR 0.00206); conversion metrics noisy as power analysis predicted; treatment-block-ordered raw file discovered → seeded tie-breaking (C11); gate_stage2: 13 passed (C8–C11) |
 | 2026-07-17 | 3 | **H3 supported (raw, strong): naive off by 5.9× the true ATE at γ\*; AIPW recovers 93.7% [92.1, 95.3]**; p_H3 = 4.5e-29 | M2 unrepairable (AIPW +2.5× at p_drop 0.5); hidden confounder → AIPW bias ×6.5; benchmark ambiguity ~0.3 pp from v2.1 merge (C16); gate_stage3: 11 passed (C12–C16) |
 | 2026-07-17 | 4 | **H2 rejected (pre-registered negative): uplift targeting loses to propensity targeting** — Δ = −253 [−374, −121] @ k=10%, −329 [−444, −200] @ k=30%; IPW-robust agrees | Both policies beat random 4–6×; no "sure things" at rare base rates + noisy conversion CATE (C17–C18); gate_stage4: 7 passed |
+| 2026-07-17 | 5 | **Holm family: H3 ✓, H1 ✓, H2 ✗. Fresh-machine Tier 1: 47 passed + 4 notebooks in 2m19s** | Full-data AIPW companion: visit +0.747 pp vs raw +1.034 pp (C20); BLP-ê β₂ = 0.266, p = 1.1e-11 (C21); ~7 CPU-h total; full suite 51 passed (C19–C22). Project complete. |

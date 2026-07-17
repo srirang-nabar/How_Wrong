@@ -1,0 +1,63 @@
+{
+  "created": "2026-07-17",
+  "aipw_companion_full": {
+    "visit": {
+      "diff_in_means": 0.010342403129198284,
+      "aipw": 0.007465933340497361,
+      "aipw_se": 0.00012818186858678583,
+      "aipw_ci_lo": 0.007214696878067261,
+      "aipw_ci_hi": 0.007717169802927462
+    },
+    "conversion": {
+      "diff_in_means": 0.0011518730521316279,
+      "aipw": 0.001012396141961642,
+      "aipw_se": 3.4757737165232915e-05,
+      "aipw_ci_lo": 0.0009442709771177854,
+      "aipw_ci_hi": 0.0010805213068054984
+    }
+  },
+  "e_hat_full": {
+    "mean": 0.8500009775161743,
+    "sd": 0.009288477711379528,
+    "min": 0.6104569435119629,
+    "max": 0.9900000095367432
+  },
+  "blp_robust_ehat_dev": {
+    "beta2_het": 0.26614833720836223,
+    "beta2_se": 0.0391821800356826,
+    "beta2_p_value": 1.1014092854536165e-11
+  },
+  "holm": {
+    "family": {
+      "H3": {
+        "p": 4.480685293561989e-29,
+        "threshold": 0.016666666666666666,
+        "significant_after_holm": true
+      },
+      "H1": {
+        "p": 9.85707497156984e-23,
+        "threshold": 0.025,
+        "significant_after_holm": true
+      },
+      "H2": {
+        "p": 0.999,
+        "threshold": 0.05,
+        "significant_after_holm": false
+      }
+    },
+    "verdicts": {
+      "H1": "supported",
+      "H2": "rejected (effect opposite registered direction)",
+      "H3": "supported"
+    }
+  },
+  "compute_budget_cpu_min": {
+    "stage1_full_pass": 3,
+    "stage2_fits": 139,
+    "stage2_metrics_rerun": 56,
+    "stage3_experiment": 98,
+    "stage4_policy": 84,
+    "stage5_finals": 10,
+    "note": "single 8-core CPU box; no GPU, no cloud spend"
+  }
+}
