@@ -6,13 +6,15 @@ methods under controlled synthetic confounding, (2) estimate heterogeneous
 treatment effects with honest evaluation, and (3) convert them into a
 budget-constrained uplift-targeting policy.
 
-**Status: Stage 3 complete — the headline is in.** Naive observational
-estimation misses the true effect by **5.9×** at the pre-registered
-confounding severity; doubly-robust correction recovers **93.7%** of the
-gap when the confounders are observed, **none** of it under selection on
-outcome, and breaks when the confounder is hidden (CLAIMS C12–C16).
-H1 heterogeneity confirmed (C8). Next: Stage 4 (the uplift-targeting
-policy layer, H2), then full-data finals.
+**Status: Stage 4 complete — all three primary hypotheses adjudicated.**
+The headline: naive observational estimation misses the true effect by
+**5.9×**; doubly-robust correction recovers **93.7%** when confounders are
+observed, none of it under selection on outcome (C12–C16). Heterogeneity
+is real (H1, C8). And the honest surprise: **uplift targeting lost to
+"target likely buyers" on the pre-registered test** (H2 rejected, C17) —
+at rare base rates there are no sure things, so the simple baseline is a
+near-optimal uplift ranking (C18). Remaining: Stage 5 (full-data finals,
+report, verification pack).
 
 ## Headline results
 
@@ -21,7 +23,7 @@ policy layer, H2), then full-data finals.
 | How biased is the naive observational ATE? (H3) | **5.9× the true effect** (+6.08 pp on a +1.03 pp ATE) at the pre-registered severity | CLAIMS C12, notebook 04 |
 | How much does doubly-robust correction recover? (H3) | **93.7%** [92.1%, 95.3%] of the gap — but 0% of selection-on-outcome, and it breaks if the confounder is unobserved | CLAIMS C13–C15, notebook 04 |
 | Does treatment-effect heterogeneity exist? (H1) | **Yes** — BLP β₂ = 0.384, p = 9.9e-23 (raw; Holm pending) | CLAIMS C8, notebook 02 |
-| CATE targeting vs propensity targeting at k=10%/30% (H2) | *pending Stage 4* | |
+| CATE targeting vs propensity targeting at k=10%/30% (H2) | **Propensity wins** — uplift targeting rejected on the pre-registered test (Δ = −253 and −329 incremental conversions; robust variant agrees) | CLAIMS C17–C18, notebook 03 |
 | Learner comparison (AUUC, ref: 0.64 S-Learner) | *pending Stage 2* | |
 
 ## Layout

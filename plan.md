@@ -85,16 +85,21 @@ Causal ML on the Criteo uplift RCT (13.98M users, verified locally): use the ran
 
 ## Stage 4 — The policy layer (week 5)
 
-- [ ] Budget-constrained targeting: rank by CATE, treat top-k%; incremental conversions vs (a) random, (b) propensity-model targeting, across the full k-grid — the three-curve money chart
-- [ ] ROI translation with stated cost/value assumptions + sensitivity of optimal k
-- [ ] H2 verdict (pre-registered k points, bootstrap CIs)
-- [ ] `notebooks/03_policy.ipynb`
+**Adjustment after C16 (2026-07-17):** the within-top-k incremental-conversion metric assumes treatment is random within any selected subgroup — only approximately true given the merge artifact (ê ∈ [0.64, 0.98]). The Stage 4 pre-registration (amendment A3, before any policy evaluation runs) must specify: plain within-subset diff-in-means as the primary H2 metric (consistent with the A2 truth convention) **plus an IPW-corrected variant (estimated ê) as pre-registered robustness**. Disagreement between them is reported, not suppressed.
+
+- [x] Budget-constrained targeting: rank by CATE, treat top-k%; incremental conversions vs (a) random, (b) propensity-model targeting, across the full k-grid — the three-curve money chart
+- [x] ROI translation with stated cost/value assumptions + sensitivity of optimal k
+- [x] H2 verdict (pre-registered k points, bootstrap CIs)
+- [x] `notebooks/03_policy.ipynb`
 
 **Gate (`gate_stage4`):** H2 adjudicated; money chart committed.
+
+**Gate passed 2026-07-17:** 7 passed. **H2 REJECTED — a clean pre-registered negative (C17):** uplift targeting underperforms propensity targeting on conversion at both registered budgets (Δ = −253 and −329 incremental conversions, CIs excluding zero; IPW-robust variant concurs). Two mechanisms (C18): conversion CATEs are noise-dominated at 1M rows (as Stage 1's power analysis predicted), and — deeper — at 0.3–5% base rates there are no saturated "sure things", so uplift scales with baseline propensity and the likely-buyer ranking is a near-optimal, lower-variance uplift ranking (propensity edges the CATE ranking even on visit, where the CATE signal is strong). Both policies beat random by 4–6×. Family status: H1 and H3 survive Holm at α = 0.05 under any ordering; H2 rejected. The honest headline for the report: *uplift modelling needs both signal and saturation to beat the simple baseline — neither exists here.*
 
 ## Stage 5 — Full-data finals, write-up & verification pack
 
 - [ ] Full 13.98M-row runs for the pre-registered final numbers only (no new analysis at full scale — that's fishing)
+- [ ] **Post-C16 exploratory additions (labelled as such):** (a) covariate-adjusted companion ATE (AIPW, full data) so the report states the truth range — raw +1.03 pp vs adjusted ≈ +0.7 pp — with the merge-artifact explanation; (b) BLP robustness re-run with estimated ê in place of the constant 0.85 (A1 assumed flat propensity)
 - [ ] README headline table; `report/report.md` (house style; limitations: single RCT, ad-exposure treatment nuances, external validity); `report/interview_qa.md` (fundamental problem of causal inference; why AUC ≠ uplift; Neyman orthogonality in the DR-learner; how you'd design the experiment; the sure-things/persuadables quadrant)
 - [ ] Fresh-machine dry run (key-less, download-less Tier 1) → `results/fresh_machine_run.log`
 - [ ] Resume bullets with real numbers (each a CLAIMS.md row)
@@ -110,6 +115,7 @@ Causal ML on the Criteo uplift RCT (13.98M users, verified locally): use the ran
 | causalml install friction | Decision point in Stage 0 with econml + hand-rolled fallback |
 | Fishing across learners × outcomes × k | Primary/exploratory split, Holm on H1–H3, full-scale runs restricted to pre-registered finals |
 | Iteration too slow at 14M rows | 1M-row certified subsample for all development |
+| v2.1 is a pool of sub-experiments: treatment mildly covariate-predictable (ê ∈ [0.64, 0.98], corr(ê, y) +0.21), file treatment-block-ordered | **Known, quantified (C11, C16).** Seeded tie-breaking in all rank metrics; benchmark ambiguity ~0.3 pp bounded by gate; Stage 4 A3 adds IPW-robust evaluation; report limitation |
 
 ## Results Log
 
@@ -119,3 +125,4 @@ Causal ML on the Criteo uplift RCT (13.98M users, verified locally): use the ran
 | 2026-07-17 | 1 | Full ITT ATE: conversion +0.1152 pp [+0.1085, +0.1219]; visit +1.0342 pp [+1.0056, +1.0629] | max \|SMD\| 0.0488; 1M dev subsample certified (max cov \|z\| 1.83, ATEs inside full CIs; 9.9 MB parquet); conversion MDE 0.0345 pp @1M / 0.0092 pp @full; gate_stage1: 10 passed (CLAIMS C3–C7) |
 | 2026-07-17 | 2 | **H1 supported (raw):** BLP β₂ = 0.384 (se 0.039), p = 9.9e-23; GATES decile 10 vs 1: +4.99 pp vs +1.53 pp | Forest tops Qini (0.00298 vs DR 0.00206); conversion metrics noisy as power analysis predicted; treatment-block-ordered raw file discovered → seeded tie-breaking (C11); gate_stage2: 13 passed (C8–C11) |
 | 2026-07-17 | 3 | **H3 supported (raw, strong): naive off by 5.9× the true ATE at γ\*; AIPW recovers 93.7% [92.1, 95.3]**; p_H3 = 4.5e-29 | M2 unrepairable (AIPW +2.5× at p_drop 0.5); hidden confounder → AIPW bias ×6.5; benchmark ambiguity ~0.3 pp from v2.1 merge (C16); gate_stage3: 11 passed (C12–C16) |
+| 2026-07-17 | 4 | **H2 rejected (pre-registered negative): uplift targeting loses to propensity targeting** — Δ = −253 [−374, −121] @ k=10%, −329 [−444, −200] @ k=30%; IPW-robust agrees | Both policies beat random 4–6×; no "sure things" at rare base rates + noisy conversion CATE (C17–C18); gate_stage4: 7 passed |

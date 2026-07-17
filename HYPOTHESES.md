@@ -133,3 +133,37 @@ Report mean bias with 95% t-CIs across replicates.
 **Exploratory arms** (descriptive): hidden-confounder variant at γ\* —
 estimators denied f9, f8, f4 (the unobserved-confounding sensitivity
 story); conversion outcome at γ\*; OR and IPW individually across the grid.
+
+### A3 — 2026-07-17: H2 policy-evaluation specification (registered before any policy evaluation)
+
+Fixed before `scripts/04_policy.py` first runs:
+
+- **Uplift score:** the DR-learner's out-of-fold **conversion** CATE from
+  Stage 2 (committed in `results/stage2/oof_cate.parquet`) — conversion is
+  the outcome H2 was registered on. No refitting, no learner substitution.
+- **Propensity-targeting baseline:** LightGBM predicting conversion from
+  the 12 features *ignoring treatment*, out-of-fold on the same 5 hashed
+  folds, A1 full config (300 trees, lr 0.05, 63 leaves, mcs 200) — the
+  industry-standard "target likely buyers" model.
+- **Metric at budget k:** targeted set = top k% by score, ties broken by
+  fixed-seed jitter (Stage 2 convention). Estimated incremental conversions
+  = within-targeted-set diff-in-means × |targeted set|. **Primary** uses
+  the plain diff-in-means (consistent with the A2 truth convention);
+  **robustness (per C16)** repeats everything with Hájek/IPW-weighted
+  within-set means using 2-fold cross-fitted ê (A2 nuisance config, clip
+  [0.01, 0.99]). If primary and robust verdicts disagree, both are
+  reported and H2 is adjudicated on the primary, with the disagreement
+  flagged.
+- **Test:** Δ(k) = incremental(CATE-ranked) − incremental(propensity-
+  ranked), evaluated at the registered k ∈ {10%, 30%} on the dev
+  subsample. Row-level bootstrap (B = 500, seed 20260717, joint resample —
+  both policies recomputed per resample including re-thresholding);
+  two-sided percentile CI and bootstrap p per k. Support for H2 requires
+  Δ > 0 with CI excluding 0 at **both** k points; family p_H2 =
+  max(p_10, p_30) (intersection–union, as for H3).
+- **Exploratory (descriptive):** the full k-grid three-curve chart
+  (CATE vs propensity vs analytic random baseline = k × total incremental);
+  visit-outcome analogue; ROI translation at stated assumptions
+  (value per conversion $40, cost per targeted user $0.15) with a
+  sensitivity grid over both — assumptions are illustrative, clearly
+  labelled, and not part of H2.
