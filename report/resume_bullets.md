@@ -6,7 +6,7 @@
 
 1. Used a **13.98M-user Criteo ad RCT** as causal ground truth to price the bias of non-experimental methods
 2. Under pre-registered confounding, naive ATEs overshot truth **5.9×**; **AIPW** recovered **93.7%** of the bias
-3. Proved effect heterogeneity (**BLP** β₂=0.38, Holm p<1e-21); **causal forest** topped 4 CATE learners, **AUUC 0.84**
+3. Proved effect heterogeneity (**BLP** β₂=0.38, Holm p<1e-21); **causal forest** best of 4 CATE learners, **AUUC 0.84**
 4. Adjudicated a **pre-registered negative**: uplift targeting lost to propensity ranking at 0.3% base rates
 
 Reviewer path: `report/SUMMARY_FOR_REVIEW.md` + pre-executed `notebooks/00_review_walkthrough.ipynb`.
