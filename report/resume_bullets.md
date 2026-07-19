@@ -2,14 +2,17 @@
 
 **Ad Uplift & Observational Bias Analysis (Causal ML, Uplift Modelling)** — Python, LightGBM, econml/causalml; 13.98M-user Criteo RCT
 
-## CV-calibrated points (final; lengths matched to resume line format)
+## CV-calibrated points (final; ≤4 resume lines total — four one-liners)
 
-1. Used a 13.98M-user Criteo ad RCT as causal ground truth to price the bias of non-experimental methods
-2. Injected pre-registered synthetic confounding: naive ATEs overshot the true ad effect 5.9×; cross-fitted doubly-robust AIPW recovered 93.7% of the bias, failing only under hidden confounders
-3. Established effect heterogeneity via Chernozhukov BLP on held-out DR-learner scores (β₂=0.38, Holm p<1e-21); causal forest led 4 CATE learners with bootstrap-validated Qini/AUUC (0.84 visit)
-4. Found uplift targeting underperformed propensity targeting at 0.3% base rates (−253/−329 conversions at k=10/30%, p=0.002); reported the pre-registered negative with full policy-curve evidence
+1. Used a **13.98M-user Criteo ad RCT** as causal ground truth to price the bias of non-experimental methods
+2. Under pre-registered confounding, naive ATEs overshot truth **5.9×**; **AIPW** recovered **93.7%** of the bias
+3. Proved effect heterogeneity (**BLP** β₂=0.38, Holm p<1e-21); **causal forest** topped 4 CATE learners, **AUUC 0.84**
+4. Adjudicated a **pre-registered negative**: uplift targeting lost to propensity ranking at 0.3% base rates
 
 Reviewer path: `report/SUMMARY_FOR_REVIEW.md` + pre-executed `notebooks/00_review_walkthrough.ipynb`.
+Alternate 2+1 packing (if a two-liner is preferred): keep points 1 and 3 as singles; merge 2+4 into one
+two-liner: "Under pre-registered confounding naive ATEs overshot truth **5.9×** (AIPW recovered **93.7%**);
+uplift targeting lost to propensity ranking at 0.3% base rates — both adjudicated as registered."
 
 ## Long-form bullets (backup detail / interview prep)
 
