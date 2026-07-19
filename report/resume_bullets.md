@@ -2,6 +2,17 @@
 
 **Ad Uplift & Observational Bias Analysis (Causal ML, Uplift Modelling)** — Python, LightGBM, econml/causalml; 13.98M-user Criteo RCT
 
+## CV-calibrated points (final; lengths matched to resume line format)
+
+1. Used a 13.98M-user Criteo ad RCT as causal ground truth to price the bias of non-experimental methods
+2. Injected pre-registered synthetic confounding: naive ATEs overshot the true ad effect 5.9×; cross-fitted doubly-robust AIPW recovered 93.7% of the bias, failing only under hidden confounders
+3. Established effect heterogeneity via Chernozhukov BLP on held-out DR-learner scores (β₂=0.38, Holm p<1e-21); causal forest led 4 CATE learners with bootstrap-validated Qini/AUUC (0.84 visit)
+4. Found uplift targeting underperformed propensity targeting at 0.3% base rates (−253/−329 conversions at k=10/30%, p=0.002); reported the pre-registered negative with full policy-curve evidence
+
+Reviewer path: `report/SUMMARY_FOR_REVIEW.md` + pre-executed `notebooks/00_review_walkthrough.ipynb`.
+
+## Long-form bullets (backup detail / interview prep)
+
 - Used a 13.98M-user randomized experiment as causal ground truth to price
   the cost of not experimenting: under pre-registered synthetic
   confounding, naive observational estimates overshot the true ad effect
